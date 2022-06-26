@@ -36,7 +36,7 @@ RUN ctest -j12
 WORKDIR /repo/open_spiel
 
 # minimal image for development in Python
-FROM python:3.6-slim-buster as python-slim
+FROM python:3.8-slim-bullseye as python-slim
 RUN mkdir repo
 WORKDIR /repo
 COPY --from=base /repo .

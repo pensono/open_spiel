@@ -39,9 +39,13 @@ add_executable(tabular_q_learning_example tabular_q_learning_example.cc ${OPEN_S
 add_executable(count_all_states count_all_states.cc ${OPEN_SPIEL_OBJECTS})
 
 if (OPEN_SPIEL_BUILD_WITH_TENSORFLOW_CC)
+  include(FindProtobuf)
+  find_package(Protobuf REQUIRED)
+  include_directories(${PROTOBUF_INCLUDE_DIR})
+
   add_executable(alpha_zero_example alpha_zero_example.cc ${OPEN_SPIEL_OBJECTS} $<TARGET_OBJECTS:alpha_zero>)
   add_test(alpha_zero_example_test alpha_zero_example)
-  target_link_libraries(alpha_zero_example TensorflowCC::TensorflowCC)
+  target_link_libraries(alpha_zero_example TensorflowCC::TensorflowCC ${PROTOBUF_LIBRARY})
 endif ()
 
 if (OPEN_SPIEL_BUILD_WITH_LIBTORCH)

@@ -119,10 +119,15 @@ std::vector<VPNetModel::InferenceOutputs> VPNetModel::Inference(
   int inference_batch_size = inputs.size();
 
   // Fill the inputs and mask
-  tensorflow::Tensor tf_inf_inputs(
-      tf::DT_FLOAT, tf::TensorShape({inference_batch_size, flat_input_size_}));
-  tensorflow::Tensor tf_inf_legal_mask(
-      tf::DT_BOOL, tf::TensorShape({inference_batch_size, num_actions_}));
+  tf::TensorShape shape;
+  shape.AddDim(inference_batch_size);
+  shape.AddDim(flat_input_size_);
+  tensorflow::Tensor tf_inf_inputs(tf::DT_FLOAT, shape);
+  
+  tf::TensorShape shape2;
+  shape.AddDim(inference_batch_size);
+  shape.AddDim(flat_input_size_);
+  tensorflow::Tensor tf_inf_legal_mask(tf::DT_BOOL, shape2);
 
   TensorMap inputs_matrix = tf_inf_inputs.matrix<float>();
   TensorMapBool mask_matrix = tf_inf_legal_mask.matrix<bool>();
@@ -170,14 +175,21 @@ std::vector<VPNetModel::InferenceOutputs> VPNetModel::Inference(
 VPNetModel::LossInfo VPNetModel::Learn(const std::vector<TrainInputs>& inputs) {
   int training_batch_size = inputs.size();
 
-  tensorflow::Tensor tf_train_inputs(
-      tf::DT_FLOAT, tf::TensorShape({training_batch_size, flat_input_size_}));
-  tensorflow::Tensor tf_train_legal_mask(
-      tf::DT_BOOL, tf::TensorShape({training_batch_size, num_actions_}));
-  tensorflow::Tensor tf_policy_targets(
-      tf::DT_FLOAT, tf::TensorShape({training_batch_size, num_actions_}));
-  tensorflow::Tensor tf_value_targets(
-      tf::DT_FLOAT, tf::TensorShape({training_batch_size, 1}));
+  tf::TensorShape shape;
+  shape.AddDim(training_batch_size);
+  shape.AddDim(flat_input_size_);
+  tensorflow::Tensor tf_train_inputs(tf::DT_FLOAT, shape);
+
+  tf::TensorShape shape2;
+  shape.AddDim(training_batch_size);
+  shape.AddDim(num_actions_);
+  tensorflow::Tensor tf_train_legal_mask(tf::DT_BOOL, shape2);
+  tensorflow::Tensor tf_policy_targets(tf::DT_FLOAT, shape2);
+  
+  tf::TensorShape shape3;
+  shape.AddDim(training_batch_size);
+  shape.AddDim(num_actions_);
+  tensorflow::Tensor tf_value_targets(tf::DT_FLOAT, shape3);
 
   // Fill the inputs and mask
   TensorMap inputs_matrix = tf_train_inputs.matrix<float>();
