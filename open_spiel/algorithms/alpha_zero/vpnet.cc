@@ -188,7 +188,7 @@ VPNetModel::LossInfo VPNetModel::Learn(const std::vector<TrainInputs>& inputs) {
   
   tf::TensorShape shape3;
   shape.AddDim(training_batch_size);
-  shape.AddDim(num_actions_);
+  shape.AddDim(1);
   tensorflow::Tensor tf_value_targets(tf::DT_FLOAT, shape3);
 
   // Fill the inputs and mask
